@@ -1,0 +1,56 @@
+# Data (too large for git)
+data/
+data_generation/
+data_processing/
+outputs/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Environment
+.env
+.venv/
+venv/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Claude
+.claude/
+
+# Logs
+*.log
+
+# Backup files
+*.bak
+
+# Review sidecar files
+*_wrong_answers.json
+*_review_progress.json
+
+# Local experiment dirs (not part of repo)
+Grounding/
+Eagle/
+InternVL/
+LLaVA-NeXT/
+NV-Reason-CXR/
+QoQ_Med/
+Qwen3-VL/
+/SGMRIQA/
+datatofinetune/
+datatofinetune.zip
+SGMRIQA.zip
+perception_models/
+figures/
+project-page/
