@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="Beyond a Single Frame: Multi-Frame Spatially Grounded Reasoning Across Volumetric MRI">
+  <meta name="keywords" content="SGMRI-VQA, MRI, Visual Grounding, VQA, Benchmark">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Beyond a Single Frame: Multi-Frame Spatially Grounded Reasoning Across Volumetric MRI</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+
+  <style>
+    :root {
+      --page-max: 1120px;
+      --text: #1f2430;
+      --muted: #667085;
+      --soft-bg: #f5f7fc;
+      --soft-bg-2: #fbfcff;
+      --card: #ffffff;
+      --shadow: 0 12px 32px rgba(16, 24, 40, 0.08);
+      --shadow-strong: 0 18px 48px rgba(16, 24, 40, 0.12);
+      --radius: 20px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Google Sans', 'Noto Sans', sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(91, 124, 255, 0.05), transparent 24%),
+        radial-gradient(circle at top right, rgba(155, 107, 255, 0.05), transparent 28%),
+        #ffffff;
+    }
+
+    .section-spacious { padding-top: 4rem; padding-bottom: 4rem; }
+    .page-container { max-width: var(--page-max); }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(180deg, #fbfcff 0%, #f5f7fd 100%);
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(95, 210, 255, 0.10), transparent 18%),
+        radial-gradient(circle at 82% 14%, rgba(155, 107, 255, 0.10), transparent 20%),
+        linear-gradient(180deg, rgba(255,255,255,0.45), rgba(255,255,255,0));
+      pointer-events: none;
+    }
+
+    .hero .hero-body, .section { position: relative; z-index: 1; }
+
+    .publication-title {
+      line-height: 1.08;
+      letter-spacing: -0.04em;
+      margin-bottom: 0.75rem;
+      font-size: clamp(2.2rem, 5vw, 4.2rem);
+      color: #162033;
+    }
+
+    .gradient-word {
+      display: inline-block;
+      padding-right: 0.03em;
+      background: linear-gradient(135deg, #ff7a59 0%, #ff5fa2 52%, #7c6cff 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-subtitle {
+      color: var(--muted);
+      max-width: 900px;
+      margin: 0 auto;
+      line-height: 1.7;
+      font-size: 1.1rem;
+    }
+
+    .hero .link-block {
+      margin: 0.2rem 0.28rem;
+      display: inline-block;
+    }
+
+    .button.is-dark.is-rounded {
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .button.is-dark.is-rounded:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 30px rgba(15, 23, 42, 0.14);
+    }
+
+    .soft-section {
+      background: linear-gradient(180deg, var(--soft-bg-2) 0%, var(--soft-bg) 100%);
+    }
+
+    .pill {
+      display: inline-block;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      color: #3155b7;
+      background: #ebf1ff;
+      padding: 0.36rem 0.82rem;
+      border-radius: 999px;
+      margin-bottom: 1rem;
+    }
+
+    .section-intro {
+      max-width: 940px;
+      margin: 0 auto;
+      color: var(--muted);
+      line-height: 1.75;
+      font-size: 1.08rem;
+    }
+
+    .figure-frame {
+      background: white;
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      padding: 0.9rem;
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .main-figure {
+      width: 100%;
+      display: block;
+      border-radius: 14px;
+      max-width: 100%;
+      height: auto;
+      object-fit: contain;
+    }
+
+    .caption-text {
+      line-height: 1.8;
+      font-size: 1.05rem;
+      color: #2b3342;
+    }
+
+    /* Highlights */
+    .highlights-shell {
+      background: linear-gradient(180deg, #ffffff 0%, #f8faff 100%);
+      border: 1px solid rgba(21, 32, 51, 0.05);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 1.2rem;
+    }
+
+    .highlights-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.95rem;
+    }
+
+    .highlight-card {
+      border: 1px solid rgba(21, 32, 51, 0.05);
+      border-radius: 20px;
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.05);
+      padding: 1.15rem 1.05rem;
+      text-align: left;
+    }
+
+    .highlight-card.card-blue { background: linear-gradient(180deg, #ffffff 0%, #f4f8ff 100%); }
+    .highlight-card.card-lilac { background: linear-gradient(180deg, #ffffff 0%, #f8f4ff 100%); }
+    .highlight-card.card-cyan { background: linear-gradient(180deg, #ffffff 0%, #f3fcff 100%); }
+    .highlight-card.card-rose { background: linear-gradient(180deg, #ffffff 0%, #fff6fb 100%); }
+
+    .highlight-topline {
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #7282a0;
+      margin-bottom: 0.65rem;
+    }
+
+    .highlight-title {
+      font-size: 1.18rem;
+      line-height: 1.2;
+      color: #162033;
+      margin-bottom: 0.7rem;
+      font-weight: 800;
+    }
+
+    .highlight-text {
+      font-size: 1rem;
+      line-height: 1.68;
+      color: #5d6a7b;
+    }
+
+    .highlight-text strong { color: #22314d; }
+
+    /* Volume animation */
+    .volume-row {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+
+    .volume-item { text-align: center; }
+
+    .volume-item canvas {
+      width: 320px;
+      height: 320px;
+      border-radius: 16px;
+      box-shadow: var(--shadow-strong);
+      background: #000;
+    }
+
+    .volume-label {
+      margin-top: 0.7rem;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .volume-sublabel {
+      font-size: 0.88rem;
+      color: var(--muted);
+      max-width: 320px;
+      margin: 0.25rem auto 0;
+      line-height: 1.5;
+    }
+
+    /* Tables */
+    .table-shell {
+      background: white;
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      padding: 1.2rem;
+      margin-top: 1.5rem;
+      overflow-x: auto;
+    }
+
+    .table-shell table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+
+    .table-shell thead { background: var(--soft-bg); }
+
+    .table-shell th {
+      padding: 10px 12px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: var(--muted);
+      border-bottom: 2px solid #e4e6f0;
+      white-space: nowrap;
+    }
+
+    .table-shell th:first-child { text-align: left; }
+
+    .table-shell td {
+      padding: 9px 12px;
+      text-align: center;
+      border-bottom: 1px solid #e4e6f0;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .table-shell td:first-child { text-align: left; font-weight: 600; }
+    .table-shell tr:last-child td { border-bottom: none; }
+
+    .row-ours { background: #dbeafe; font-weight: 700; }
+
+    .row-sep td {
+      padding: 4px 12px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--muted);
+      font-style: italic;
+      background: var(--soft-bg);
+    }
+
+    .best { font-weight: 800; color: #2563eb; }
+    .second-best { text-decoration: underline; text-underline-offset: 2px; }
+
+    .table-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #162033;
+      margin-bottom: 0.3rem;
+    }
+
+    .table-note { font-size: 0.88rem; color: var(--muted); margin-bottom: 0.8rem; }
+
+    /* BibTeX */
+    pre code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.95rem;
+      line-height: 1.65;
+    }
+
+    .affil-icon {
+      height: 18px;
+      width: auto;
+      vertical-align: -3px;
+      margin-right: 2px;
+    }
+
+    .coming-soon {
+      position: relative;
+      cursor: default;
+    }
+
+    .coming-soon::after {
+      content: "Coming Soon";
+      visibility: hidden;
+      opacity: 0;
+      position: absolute;
+      left: 50%;
+      bottom: calc(100% + 8px);
+      transform: translateX(-50%);
+      background-color: black;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 5px;
+      white-space: nowrap;
+      font-size: 12px;
+      z-index: 9999;
+      transition: opacity 0.2s ease-in-out;
+    }
+
+    .coming-soon:hover::after { visibility: visible; opacity: 1; }
+
+    @media screen and (max-width: 1024px) {
+      .highlights-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media screen and (max-width: 768px) {
+      .section-spacious { padding-top: 3rem; padding-bottom: 3rem; }
+      .highlights-grid { grid-template-columns: 1fr; }
+      .table-shell table { font-size: 0.78rem; }
+      .table-shell th, .table-shell td { padding: 7px 7px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container page-container">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+
+            <h1 class="title publication-title">
+              Beyond a Single Frame: Multi-Frame Spatially Grounded Reasoning Across Volumetric MRI
+            </h1>
+
+            <div class="is-size-5 publication-authors">
+              <span class="author-block"><a href="#">Lama Moukheiber</a><sup>1</sup>,</span>
+              <span class="author-block"><a href="#">Caleb M. Yeung</a><sup>2,3</sup>,</span>
+              <span class="author-block"><a href="#">Haotian Xue</a><sup>1</sup>,</span>
+              <span class="author-block"><a href="#">Alec Helbling</a><sup>1</sup>,</span>
+              <span class="author-block"><a href="#">Zelin Zhao</a><sup>1</sup>,</span>
+              <span class="author-block"><a href="#">Yongxin Chen</a><sup>1</sup></span>
+            </div>
+
+            <div class="is-size-5 publication-authors" style="margin-top: 0.3rem;">
+              <span class="author-block"><sup>1</sup><img src="static/figures/gt-logo.png" alt="GT" class="affil-icon">Georgia Institute of Technology,</span>
+              <span class="author-block"><sup>2</sup><img src="static/figures/harvard-logo.png" alt="Harvard" class="affil-icon">Harvard University,</span>
+              <span class="author-block"><sup>3</sup><img src="static/figures/georgetown-logo.png" alt="Georgetown" class="affil-icon">Georgetown University</span>
+            </div>
+
+            <div class="column has-text-centered">
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2604.15808" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fas fa-file-lines"></i></span>
+                  <span>Paper</span>
+                </a>
+              </span>
+
+              <span class="link-block">
+                <a href="https://github.com/lamawmouk/SGMRI-VQA" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fab fa-github"></i></span>
+                  <span>GitHub</span>
+                </a>
+              </span>
+
+              <span class="link-block">
+                <a href="https://huggingface.co/lamamkh/Qwen3-VL-8B-SGMRIVQA" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                    <img src="static/figures/hf-icon.svg" alt="" style="width:20px;height:20px;">
+                  </span>
+                  <span>Hugging Face</span>
+                </a>
+              </span>
+
+              <span class="link-block">
+                <a href="https://huggingface.co/datasets/lamamkh/SGMRI-VQA" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fas fa-database"></i></span>
+                  <span>Dataset</span>
+                </a>
+              </span>
+
+              <span class="link-block">
+                <a href="#BibTeX" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fas fa-quote-right"></i></span>
+                  <span>Cite</span>
+                </a>
+              </span>
+            </div>
+
+            <p class="hero-subtitle">
+              <strong>SGMRI-VQA (Spatially Grounded MRI Visual Question Answering)</strong> evaluates whether vision-language models can spatially ground their clinical findings across volumetric MRI, providing frame-indexed bounding boxes alongside chain-of-thought reasoning.
+            </p>
+
+            <div class="hero-subtitle" style="margin-top: 0.8rem;">
+              Feed a full brain or knee MRI volume, and SGMRI-VQA tests detection, localization, classification, counting, and captioning&mdash;requiring models to reason about <em>what</em> is present, <em>where</em> it is, and <em>across which frames</em> it extends.
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== VOLUME ANIMATIONS ===== -->
+  <section class="hero">
+    <div class="hero-body" style="padding-top: 1rem; padding-bottom: 2rem;">
+      <div class="container page-container has-text-centered">
+        <div class="volume-row">
+          <div class="volume-item">
+            <img src="static/figures/brain_volume.gif" alt="Brain MRI volume animation" style="width:320px; border-radius:12px;">
+            <div class="volume-label">Brain MRI (Axial T1 Post-contrast)</div>
+            <div class="volume-sublabel">Edema, mass, posttreatment change</div>
+          </div>
+          <div class="volume-item">
+            <img src="static/figures/knee_volume.gif" alt="Knee MRI volume animation" style="width:320px; border-radius:12px;">
+            <div class="volume-label">Knee MRI (Sagittal PD)</div>
+            <div class="volume-sublabel">Cartilage defect, ACL sprain, meniscus tear, joint effusion</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== HIGHLIGHTS ===== -->
+  <section class="section soft-section section-spacious">
+    <div class="container page-container">
+      <div class="columns is-centered">
+        <div class="column">
+          <h2 class="title is-3 has-text-centered">Highlights</h2>
+
+          <div class="highlights-shell">
+            <div class="highlights-grid">
+              <div class="highlight-card card-blue">
+                <div class="highlight-topline">Benchmark</div>
+                <div class="highlight-title">41,307 QA pairs</div>
+                <div class="highlight-text">
+                  Largest multi-frame spatially grounded VQA benchmark for MRI, spanning <strong>brain and knee</strong> across image-level and volume-level tasks.
+                </div>
+              </div>
+
+              <div class="highlight-card card-lilac">
+                <div class="highlight-topline">Grounding Gap</div>
+                <div class="highlight-title">Text vs. spatial disconnect</div>
+                <div class="highlight-text">
+                  Models that produce clinically plausible text <strong>fail at spatial localization</strong>&mdash;V-Scores below 4% across all zero-shot baselines.
+                </div>
+              </div>
+
+              <div class="highlight-card card-cyan">
+                <div class="highlight-topline">Hierarchical Tasks</div>
+                <div class="highlight-title">Radiologist-aligned evaluation</div>
+                <div class="highlight-text">
+                  Detection, localization, classification, counting, and captioning mirror how <strong>radiologists reconstruct 3D understanding</strong> across slices.
+                </div>
+              </div>
+
+              <div class="highlight-card card-rose">
+                <div class="highlight-topline">Fine-Tuning</div>
+                <div class="highlight-title">Spatial supervision works</div>
+                <div class="highlight-text">
+                  Qwen3-VL-8B fine-tuned with <strong>bounding box supervision</strong> achieves the best overall performance, bridging the grounding gap.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== BENCHMARK OVERVIEW ===== -->
+  <section class="section section-spacious">
+    <div class="container page-container">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <span class="pill">Benchmark</span>
+          <h2 class="title is-3">Hierarchical Task Structure</h2>
+          <p class="section-intro">
+            SGMRI-VQA organizes tasks hierarchically to mirror clinical reading. At the volume level, models process the full 3D scan as a multi-frame sequence. Each QA pair couples a clinician-aligned <strong>chain-of-thought reasoning trace</strong> with <strong>frame-indexed bounding box coordinates</strong>.
+          </p>
+
+          <div class="figure-frame" style="margin-top: 2rem;">
+            <img src="static/figures/fig_task_examples.png" alt="Task examples" class="main-figure">
+          </div>
+
+          <div class="content" style="margin-top: 1.5rem;">
+            <p class="caption-text">
+              Representative examples from each task category. Each QA pair includes a question, chain-of-thought reasoning, and frame-indexed bounding box coordinates for spatial grounding.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== DATASET ===== -->
+  <section class="section soft-section section-spacious">
+    <div class="container page-container">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <span class="pill">Data</span>
+          <h2 class="title is-3">Dataset Composition</h2>
+          <p class="section-intro">
+            Built on expert radiologist annotations from the <strong>fastMRI+</strong> dataset, SGMRI-VQA covers 1,970 MRI volumes (996 brain, 974 knee) with 32,142 image-level and 9,165 volume-level QA pairs.
+          </p>
+
+          <div class="figure-frame" style="margin-top: 2rem;">
+            <img src="static/figures/fig_finding_sunburst.png" alt="Finding distribution" class="main-figure">
+          </div>
+
+          <div class="content" style="margin-top: 1.5rem;">
+            <p class="caption-text">
+              Sunburst chart of clinical finding categories showing normal vs. abnormal distribution across brain and knee MRI.
+            </p>
+          </div>
+
+          <div class="figure-frame" style="margin-top: 2rem;">
+            <img src="static/figures/fig_dataset_statistics.png" alt="Dataset statistics" class="main-figure">
+          </div>
+
+          <div class="content" style="margin-top: 1.5rem;">
+            <p class="caption-text">
+              Distribution of QA pairs across tasks and anatomical domains.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== QUALITY ASSURANCE ===== -->
+  <section class="section section-spacious">
+    <div class="container page-container">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <span class="pill">Quality</span>
+          <h2 class="title is-3">Multi-Stage Quality Assurance</h2>
+          <p class="section-intro">
+            GPT-4o generates QA pairs from radiologist annotations, but introduces systematic hallucinations. We identify and correct these through <strong>automated validation</strong> and iterative <strong>clinical expert review</strong>.
+          </p>
+
+          <div class="figure-frame" style="margin-top: 2rem;">
+            <img src="static/figures/fig_gpt4o_errors.png" alt="GPT-4o errors" class="main-figure">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== RESULTS ===== -->
+  <section class="section soft-section section-spacious">
+    <div class="container page-container">
+      <div class="columns is-centered has-text-centered">
+        <div class="column">
+          <span class="pill">Results</span>
+          <h2 class="title is-3">The Grounding Gap</h2>
+          <p class="section-intro">
+            We evaluate 10 VLMs with three complementary metrics: <strong>A-Score</strong> (factual accuracy), <strong>AR-Score</strong> (clinical reasoning quality), and <strong>V-Score</strong> (spatial grounding via mIoU).
+          </p>
+
+          <div class="table-shell">
+            <div class="table-title" style="text-align:left;">Image-Level Per-Task Performance</div>
+            <div class="table-note" style="text-align:left;">All values in %. Best in <span class="best">blue</span>, second best <span class="second-best">underlined</span>.</div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Model</th>
+                  <th>Detection<br><small>A-Score</small></th>
+                  <th>Classification<br><small>A-Score</small></th>
+                  <th>Diagnosis<br><small>A-Score</small></th>
+                  <th>Localization<br><small>V-Score</small></th>
+                  <th>Localization<br><small>AR-Score</small></th>
+                  <th>Captioning<br><small>AR-Score</small></th>
+                  <th>Avg.</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="row-sep"><td colspan="8">Proprietary Models</td></tr>
+                <tr><td>GPT-4o</td><td>50.74</td><td>52.49</td><td>44.71</td><td>3.41</td><td>26.22</td><td>16.90</td><td>32.41</td></tr>
+                <tr><td>Gemini-2.5-Pro</td><td>19.24</td><td>31.33</td><td>34.32</td><td>3.33</td><td>14.89</td><td>11.91</td><td>19.17</td></tr>
+                <tr><td>Gemini-2.5-Flash</td><td class="second-best">67.36</td><td class="second-best">86.31</td><td class="second-best">89.68</td><td class="second-best">5.95</td><td class="second-best">27.85</td><td class="second-best">21.72</td><td class="second-best">49.81</td></tr>
+                <tr class="row-sep"><td colspan="8">Open-Source Models (7&ndash;8B)</td></tr>
+                <tr><td>LLaVA-Video-7B</td><td>52.41</td><td>65.41</td><td>71.58</td><td>2.29</td><td>23.11</td><td>13.31</td><td>38.02</td></tr>
+                <tr><td>Eagle2.5-8B</td><td>26.94</td><td>57.55</td><td>61.39</td><td>2.59</td><td>23.98</td><td>15.41</td><td>31.31</td></tr>
+                <tr><td>Qwen3-VL-8B</td><td>46.11</td><td>76.02</td><td>80.29</td><td>3.11</td><td>24.55</td><td>19.86</td><td>41.66</td></tr>
+                <tr><td>InternVL2.5-8B</td><td>22.25</td><td>37.33</td><td>30.43</td><td>1.82</td><td>25.78</td><td>14.37</td><td>22.00</td></tr>
+                <tr><td>Qwen2.5-VL-7B</td><td>12.00</td><td>50.68</td><td>39.88</td><td>1.51</td><td>26.75</td><td>18.19</td><td>24.83</td></tr>
+                <tr class="row-sep"><td colspan="8">Domain-Specific Medical VLMs (image-level only)</td></tr>
+                <tr><td>LLaVA-Med-v1.5 (7B)</td><td>6.90</td><td>85.36</td><td>59.18</td><td>0.00</td><td>23.43</td><td>12.20</td><td>31.18</td></tr>
+                <tr><td>MedGemma-1.5 (4B)</td><td>26.94</td><td>65.98</td><td>64.61</td><td>2.77</td><td>24.93</td><td>17.24</td><td>33.74</td></tr>
+                <tr class="row-sep"><td colspan="8">Fine-Tuned</td></tr>
+                <tr class="row-ours"><td>Ours (Qwen3-VL-8B-FT)</td><td class="best">95.11</td><td class="best">97.56</td><td class="best">94.50</td><td class="best">15.51</td><td class="best">28.99</td><td class="best">25.05</td><td class="best">59.45</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="table-shell">
+            <div class="table-title" style="text-align:left;">Volume-Level Per-Task Performance</div>
+            <div class="table-note" style="text-align:left;">All values in %. Best in <span class="best">blue</span>, second best <span class="second-best">underlined</span>.</div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Model</th>
+                  <th>Detection<br><small>A-Score</small></th>
+                  <th>Counting<br><small>A-Score</small></th>
+                  <th>Classification<br><small>A-Score</small></th>
+                  <th>Localization<br><small>V-Score</small></th>
+                  <th>Localization<br><small>AR-Score</small></th>
+                  <th>Captioning<br><small>AR-Score</small></th>
+                  <th>Avg.</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="row-sep"><td colspan="8">Proprietary Models</td></tr>
+                <tr><td>GPT-4o</td><td>70.57</td><td class="second-best">35.97</td><td>67.51</td><td>1.20</td><td class="second-best">24.83</td><td>20.19</td><td class="second-best">36.71</td></tr>
+                <tr><td>Gemini-2.5-Pro</td><td>16.03</td><td>4.08</td><td>28.21</td><td>0.26</td><td>12.42</td><td>12.71</td><td>12.29</td></tr>
+                <tr><td>Gemini-2.5-Flash</td><td>54.89</td><td>17.66</td><td>56.31</td><td class="second-best">1.83</td><td>23.27</td><td class="second-best">22.27</td><td>29.37</td></tr>
+                <tr class="row-sep"><td colspan="8">Open-Source Models (7&ndash;8B)</td></tr>
+                <tr><td>Qwen3-VL-8B</td><td>62.23</td><td>30.98</td><td>64.72</td><td>0.16</td><td>21.93</td><td>19.05</td><td>33.18</td></tr>
+                <tr><td>Eagle2.5-8B</td><td class="second-best">70.65</td><td>16.30</td><td class="second-best">70.73</td><td>0.02</td><td>19.07</td><td>16.20</td><td>32.16</td></tr>
+                <tr><td>InternVL2.5-8B</td><td>28.80</td><td>14.95</td><td>44.01</td><td>0.41</td><td>17.66</td><td>16.29</td><td>20.35</td></tr>
+                <tr><td>LLaVA-Video-7B</td><td>37.23</td><td>13.59</td><td>48.94</td><td>0.06</td><td>16.26</td><td>12.36</td><td>21.41</td></tr>
+                <tr><td>Qwen2.5-VL-7B</td><td>24.18</td><td>25.27</td><td>62.54</td><td>0.07</td><td>15.63</td><td>16.67</td><td>24.06</td></tr>
+                <tr class="row-sep"><td colspan="8">Fine-Tuned</td></tr>
+                <tr class="row-ours"><td>Ours (Qwen3-VL-8B-FT)</td><td class="best">99.18</td><td class="best">37.77</td><td class="best">97.70</td><td class="best">5.97</td><td class="best">28.24</td><td class="best">26.54</td><td class="best">49.23</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== QUALITATIVE ===== -->
+  <section class="section section-spacious">
+    <div class="container page-container">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <span class="pill">Qualitative</span>
+          <h2 class="title is-3">Spatial Grounding After SFT</h2>
+          <p class="section-intro">
+            Bounding box predictions from our fine-tuned Qwen3-VL-8B compared to ground truth, demonstrating that <strong>targeted spatial supervision</strong> enables accurate localization.
+          </p>
+        </div>
+      </div>
+      <div class="columns is-centered has-text-centered">
+        <div class="column">
+          <div class="figure-frame" style="margin-top: 2rem; max-width: 100%;">
+            <img src="static/figures/ep2_sft_combined_bbox_results.png" alt="Bbox results" class="main-figure">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== BIBTEX ===== -->
+  <section class="section soft-section section-spacious" id="BibTeX">
+    <div class="container page-container">
+      <div class="columns is-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3 has-text-centered">BibTeX</h2>
+          <div class="figure-frame">
+<pre><code>@inproceedings{moukheiber2026sgmrivqa,
+  title     = {Beyond a Single Frame: A Benchmark for Multi-Frame Spatially
+               Grounded Visual Reasoning for MRI},
+  author    = {Moukheiber, Lama and Yeung, Caleb M. and Xue, Haotian
+               and Helbling, Alec and Zhao, Zelin and Chen, Yongxin},
+  year      = {2026}
+}</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CANVAS ANIMATION SCRIPT ===== -->
+  <script>
+    const COLORS = ['#00ff7f','#ff6464','#64b4ff','#ffd250','#c882ff','#ffa064','#64ffc8','#ff64c8'];
+
+  </script>
+
+</body>
+</html>
