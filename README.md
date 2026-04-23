@@ -224,13 +224,14 @@ bash scripts/slurm/submit_vqa_full_eval.sh
 ## Citation
 
 ```bibtex
-@inproceedings{moukheiber2026sgmrivqa,
-  title     = {Beyond a Single Frame: A Benchmark for Multi-Frame Spatially
-               Grounded Visual Reasoning for {MRI}},
-  author    = {Moukheiber, Lama and Yeung, Caleb M. and Xue, Haotian
-               and Helbling, Alec and Zhao, Zelin and Chen, Yongxin},
-  year      = {2025}
-}
+@misc{moukheiber2026singleframemultiframespatially,
+      title={Beyond a Single Frame: Multi-Frame Spatially Grounded Reasoning Across Volumetric MRI},
+      author={Lama Moukheiber and Caleb M. Yeung and Haotian Xue and Alec Helbling and Zelin Zhao and Yongxin Chen},
+      year={2026},
+      eprint={2604.15808},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2604.15808}
 ```
 
 ## License
