@@ -12,7 +12,6 @@ SGMRI-VQA is a benchmark for evaluating how well VLMs spatially ground findings 
 
 - **41,307 QA pairs** across brain and knee MRI with frame-indexed bounding boxes and chain-of-thought reasoning
 - **Hierarchical tasks**: detection &rarr; localization &rarr; counting/classification &rarr; captioning
-- **Three metrics**: A-Score (answer accuracy), AR-Score (reasoning quality via GPT-4o judge), V-Score (mIoU spatial grounding)
 - **12 VLMs benchmarked** (3 proprietary, 5 open-source general, 4 medical) at image-level and multi-frame
 - **Fine-tuning Qwen3-VL-8B** with bounding box supervision closes the grounding gap
 
