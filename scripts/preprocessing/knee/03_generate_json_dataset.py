@@ -39,8 +39,8 @@ from collections import defaultdict
 # CONFIG
 # --------------------------------------------------------
 BASE = "/storage/ice-shared/ae8803che/lmkh3/"
-CSV_PATH = "/home/hice1/lmoukheiber3/SDR/fastmri-plus/Annotations/knee.csv"
-OUTPUT_JSON = "/home/hice1/lmoukheiber3/SDR/fastmri-plus/Annotations/knee_val_medtr_volumes.json"
+CSV_PATH = "<DATA_ROOT>/fastmri-plus/Annotations/knee.csv"
+OUTPUT_JSON = "<DATA_ROOT>/fastmri-plus/Annotations/knee_test_medtr_volumes.json"
 
 SPLIT = "val"                 # train / val / test
 RAW_SUFFIX = "_labeled_raw"

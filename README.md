@@ -1,33 +1,19 @@
-# Beyond a Single Frame: A Benchmark for Multi-Frame Spatially Grounded Visual Reasoning for MRI
+# Beyond a Single Frame: Multi-Frame Spatially Grounded Reasoning Across MRI
 
 <p align="center">
-  <a href="https://arxiv.org/abs/2512.16301">Paper (arXiv)</a> &nbsp;&middot;&nbsp;
-   <a href="https://lamawmouk.github.io/SGMRI-VQA">Project Page</a> &nbsp;&middot;&nbsp;  
-  <a href="https://huggingface.co/lamamkh/Qwen3-8B-SGMRIQA-SFT">Model Weights</a>
+  <a href="https://huggingface.co/datasets/SpatialGroundingVQA/SGMRI-VQA">Dataset</a>
 </p>
 
 <p align="center">
-  <b>Lama Moukheiber</b><sup>1</sup> &middot;
-  <b>Caleb M. Yeung</b><sup>2,3</sup> &middot;
-  <b>Haotian Xue</b><sup>1</sup> &middot;
-  <b>Alec Helbling</b><sup>1</sup> &middot;
-  <b>Zelin Zhao</b><sup>1</sup> &middot;
-  <b>Yongxin Chen</b><sup>1</sup>
+  <i>Anonymous submission to NeurIPS 2026 — author and affiliation information will be added upon acceptance.</i>
 </p>
 
-<p align="center">
-  <sup>1</sup>Georgia Institute of Technology &nbsp;&nbsp;
-  <sup>2</sup>Harvard University &nbsp;&nbsp;
-  <sup>3</sup>Georgetown University
-</p>
-
-
-SGMRI-VQA is a benchmark for evaluating how well VLMs spatially ground findings in volumetric medical images, where reasoning must extend across dozens of sequential slices.
+SGMRI-VQA is a benchmark for evaluating how well VLMs spatially ground findings in MRI, where reasoning must extend across dozens of sequential slices.
 
 - **41,307 QA pairs** across brain and knee MRI with frame-indexed bounding boxes and chain-of-thought reasoning
 - **Hierarchical tasks**: detection &rarr; localization &rarr; counting/classification &rarr; captioning
 - **Three metrics**: A-Score (answer accuracy), AR-Score (reasoning quality via GPT-4o judge), V-Score (mIoU spatial grounding)
-- **10 VLMs benchmarked** (3 proprietary, 7 open-source) at image-level and volume-level
+- **12 VLMs benchmarked** (3 proprietary, 5 open-source general, 4 medical) at image-level and multi-frame
 - **Fine-tuning Qwen3-VL-8B** with bounding box supervision closes the grounding gap
 
 <p align="center">
@@ -52,9 +38,11 @@ All values in %. Best in **bold**, second best in <ins>underline</ins>.
 | Qwen2.5-VL-7B | 5.29 | 50.68 | 39.88 | 1.51 | 26.75 | 18.19 | 23.72 |
 | LLaVA-Med-v1.5 | 6.90 | 85.36 | 59.18 | 0.00 | 23.43 | 12.20 | 31.18 |
 | MedGemma-1.5-4B | 20.11 | 65.98 | 64.61 | 2.77 | 24.93 | 17.24 | 32.61 |
-| **Ours** (Qwen3-VL-8B-FT) | **95.11** | **97.56** | **94.50** | **15.51** | **28.99** | **25.05** | **59.45** |
+| Lingshu-7B | 47.12 | 43.37 | 46.58 | 0.09 | 25.64 | 11.19 | 29.00 |
+| OctoMed-7B | 35.59 | 58.08 | 51.61 | 2.03 | 19.34 | 13.92 | 30.09 |
+| **Ours** (Qwen3-VL-8B-SGMRIVQA) | **95.11** | **97.56** | **94.50** | **15.51** | **28.99** | **25.05** | **59.45** |
 
-### Volume-Level
+### Multi-Frame
 
 | Model | Detection | Counting | Classification | Localization (V) | Localization (AR) | Captioning | Avg. |
 |-------|:---------:|:--------:|:--------------:|:-----------------:|:------------------:|:----------:|:----:|
@@ -66,12 +54,14 @@ All values in %. Best in **bold**, second best in <ins>underline</ins>.
 | InternVL2.5-8B | 28.80 | 14.95 | 44.01 | 0.41 | 17.66 | 16.29 | 20.35 |
 | LLaVA-Video-7B | 37.23 | 13.59 | 48.94 | 0.06 | 16.26 | 12.36 | 21.41 |
 | Qwen2.5-VL-7B | 24.18 | 25.27 | 62.54 | 0.07 | 15.63 | 16.67 | 24.06 |
-| **Ours** (Qwen3-VL-8B-FT) | **99.18** | **37.77** | **97.70** | **5.97** | **28.24** | **26.54** | **49.23** |
+| Lingshu-7B | 40.49 | 20.38 | 68.78 | 0.08 | 18.21 | 16.38 | 27.39 |
+| OctoMed-7B | 38.32 | 28.26 | 55.52 | 0.04 | 16.07 | 16.71 | 25.82 |
+| **Ours** (Qwen3-VL-8B-SGMRIVQA) | **99.18** | **37.77** | **97.70** | **5.97** | **28.24** | **26.54** | **49.23** |
 
 ## Project Structure
 
 ```
-SGMRIQA/
+SGMRI-VQA/
 ├── src/sgmriqa/              # Core evaluation framework
 │   ├── config/               #   Path constants, model registry
 │   ├── data/                 #   Data loader, prompt builder
@@ -93,8 +83,8 @@ SGMRIQA/
 ## Setup
 
 ```bash
-git clone https://github.com/lamawmouk/SGMRIQA.git
-cd SGMRIQA
+git clone <REPO_URL>
+cd SGMRI-VQA
 pip install -e .
 ```
 
@@ -107,7 +97,9 @@ GOOGLE_API_KEY=your-key
 
 ### Data
 
-Data is not included in this repository. The benchmark is built from the [fastMRI+](https://github.com/microsoft-research/fastMRIplus) dataset with expert radiologist annotations spanning 1,970 MRI volumes.
+Data is hosted on Hugging Face: [SpatialGroundingVQA/SGMRI-VQA](https://huggingface.co/datasets/SpatialGroundingVQA/SGMRI-VQA).
+
+The benchmark is built from the [fastMRI+](https://github.com/microsoft-research/fastMRIplus) dataset with expert radiologist annotations spanning 1,866 MRI volumes (892 brain + 974 knee).
 
 Configure data paths via environment variables or place directories at the project root:
 
@@ -171,7 +163,7 @@ python scripts/cleaning/clean_knee_qa.py
 # Single model, image-level
 python -m sgmriqa.run_inference --models gpt-4o --datasets brain --eval-mode image
 
-# Multiple models, video-level (volume)
+# Multiple models, multi-frame
 python -m sgmriqa.run_inference --models gemini-2.5-flash qwen3-vl-8b --eval-mode video
 
 # All modes
@@ -209,7 +201,7 @@ bash scripts/slurm/submit_vqa_full_eval.sh
 | 1 | GPT-4o | &mdash; | `api_openai.py` |
 | 2 | Gemini 2.5 Pro | &mdash; | `api_gemini.py` |
 | 3 | Gemini 2.5 Flash | &mdash; | `api_gemini.py` |
-| | **Open-Source** | | |
+| | **Open-Source General** | | |
 | 4 | LLaVA-Video-7B | 7B | `llava_video_runner.py` |
 | 5 | Eagle 2.5 | 8B | `eagle_runner.py` |
 | 6 | Qwen3-VL | 8B | `qwen3_vl_runner.py` |
@@ -218,18 +210,19 @@ bash scripts/slurm/submit_vqa_full_eval.sh
 | | **Medical** | | |
 | 9 | LLaVA-Med v1.5 | 7B | `hf_llava_med.py` |
 | 10 | MedGemma 1.5 | 4B | `hf_medgemma.py` |
+| 11 | Lingshu | 7B | `qwen2_vl_runner.py` |
+| 12 | OctoMed | 7B | `qwen2_vl_runner.py` |
 | | **Fine-Tuned (Ours)** | | |
-| 11 | [Qwen3-VL-8B-SGMRIVQA-SFT](https://huggingface.co/lamamkh/Qwen3-8B-SGMRIQA-SFT) | 8B | `qwen3_vl_runner.py` |
+| 13 | Qwen3-VL-8B-SGMRIVQA | 8B | `qwen3_vl_runner.py` |
 
 ## Citation
 
 ```bibtex
-@inproceedings{moukheiber2026sgmrivqa,
-  title     = {Beyond a Single Frame: A Benchmark for Multi-Frame Spatially
-               Grounded Visual Reasoning for {MRI}},
-  author    = {Moukheiber, Lama and Yeung, Caleb M. and Xue, Haotian
-               and Helbling, Alec and Zhao, Zelin and Chen, Yongxin},
-  year      = {2025}
+@inproceedings{sgmrivqa2026,
+  title     = {Beyond a Single Frame: Multi-Frame Spatially Grounded Reasoning Across {MRI}},
+  author    = {Anonymous},
+  booktitle = {Submitted to NeurIPS 2026 Datasets \& Benchmarks Track},
+  year      = {2026}
 }
 ```
 

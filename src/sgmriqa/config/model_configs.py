@@ -212,11 +212,53 @@ MODEL_REGISTRY: Dict[str, ModelConfig] = {
         bbox_instruction=_BBOX_INST_PLAIN,
     ),
 
+    # OctoMed-7B and Lingshu-7B are both initialized from Qwen2.5-VL-7B-Instruct
+    # so they share the Qwen2VLRunner and inherit Qwen2.5-VL's video / multi-image
+    # support (image and volume level).
+
+    "octomed-7b": ModelConfig(
+        name="OctoMed-7B",
+        model_id="OctoMed/OctoMed-7B",
+        model_type="vllm",
+        runner_module="sgmriqa.models.qwen2_vl_runner",
+        runner_class="Qwen2VLRunner",
+        max_context_window=32_768,
+        max_new_tokens=2048,
+        max_image_tokens=480,
+        supports_video=True,
+        supports_grounding=True,
+        supports_multi_image=True,
+        supports_thinking=True,
+        bbox_format=_QWEN_BBOX,
+        bbox_instruction=_QWEN_BBOX_INST,
+        think_open="<think>",
+        think_close="</think>",
+    ),
+
+    "lingshu-7b": ModelConfig(
+        name="Lingshu-7B",
+        model_id="lingshu-medical-mllm/Lingshu-7B",
+        model_type="vllm",
+        runner_module="sgmriqa.models.qwen2_vl_runner",
+        runner_class="Qwen2VLRunner",
+        max_context_window=32_768,
+        max_new_tokens=2048,
+        max_image_tokens=480,
+        supports_video=True,
+        supports_grounding=True,
+        supports_multi_image=True,
+        supports_thinking=True,
+        bbox_format=_QWEN_BBOX,
+        bbox_instruction=_QWEN_BBOX_INST,
+        think_open="<think>",
+        think_close="</think>",
+    ),
+
     # ── Fine-tuned (Ours) ────────────────────────────────────────────────
 
     "qwen3-vl-8b-mri-vqa-full": ModelConfig(
         name="Qwen3-VL-8B-SGMRIQA-SFT",
-        model_id="lamamkh/Qwen3-8B-SGMRIQA-SFT",
+        model_id="<ANON_HF_ORG>/Qwen3-VL-8B-SGMRIVQA-SFT",
         model_type="vllm",
         runner_module="sgmriqa.models.qwen3_vl_runner",
         runner_class="Qwen3VLRunner",
