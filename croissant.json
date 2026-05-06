@@ -99,7 +99,7 @@
       "@type": "cr:FileSet",
       "@id": "qa-pairs",
       "name": "qa-pairs",
-      "description": "JSON files containing brain and knee MRI question-answer pairs with chain-of-thought reasoning traces and ground-truth bounding-box coordinates. Files are organized as {brain,knee}/{train,test}/{image_qa,volume_qa}/*.json. Image-level QA pairs are in image_qa/, multi-frame QA pairs are in volume_qa/. The repository releases ONLY these derived QA pairs; the underlying MRI images and original radiologist bounding-box annotations are NOT included and must be obtained directly from fastMRI (https://fastmri.med.nyu.edu/) and fastMRI+ (https://github.com/microsoft/fastmri-plus).",
+      "description": "JSON files containing brain and knee MRI question-answer pairs with chain-of-thought reasoning traces and ground-truth bounding-box coordinates. Files are organized as {brain,knee}/{train,test}/{image_qa,volume_qa}/*.json. Image-level QA pairs are in image_qa/, multi-frame QA pairs are in volume_qa/. The repository releases only these derived QA pairs; the fastMRI raw data and reference images can be obtained directly from fastmri.org. Bounding-box annotations come from fastMRI+ (https://github.com/microsoft/fastmri-plus).",
       "containedIn": {
         "@id": "huggingface-repo"
       },
