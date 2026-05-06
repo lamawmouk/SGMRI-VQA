@@ -73,7 +73,7 @@
 
   "rai:dataBiases": "Demographic skew: patient demographics reflect the source institution's catchment population (single hospital). Scanner bias: all scans acquired on a small set of Siemens Magnetom scanners (Aera 1.5T, Skyra 3T, Prisma 3T, Biograph mMR 3T). Sequence bias: brain scans use only axial FLAIR and T1-weighted sequences; knee scans use only sagittal proton-density-weighted with fat saturation. Selection bias: fastMRI+ images were selected and annotated by the original authors and may not be representative of all clinical cases. Finding-category imbalance: certain categories (e.g., nonspecific white matter lesions for brain, meniscus tear for knee) appear more frequently than others, reflecting clinical prevalence in the source cohort rather than balanced sampling.",
 
-  "rai:personalSensitiveInformation": "The dataset contains medical imaging data (MRI scans of human patients) sourced from fastMRI+, which is itself derived from de-identified scans. No direct identifiers (PHI) are included. Users are responsible for verifying compliance with HIPAA, GDPR, or equivalent regional health-data regulations for their specific use case. The dataset does not include race, ethnicity, socio-economic status, or other demographic attributes beyond what is implicit in the imaging itself.",
+  "rai:personalSensitiveInformation": "This Hugging Face repository releases ONLY the derived QA-pair JSON files (questions, answers, chain-of-thought reasoning traces, and bounding-box references). The underlying MRI images and original radiologist bounding-box annotations are NOT redistributed and must be obtained directly from the fastMRI+ project (https://github.com/microsoft/fastmri-plus) under its own data-use agreement. The source fastMRI+ scans are de-identified by the original providers; no direct identifiers (PHI) are included in this derived dataset. Users are responsible for verifying compliance with HIPAA, GDPR, or equivalent regional health-data regulations for their specific use case. The dataset does not include race, ethnicity, socio-economic status, or other demographic attributes beyond what is implicit in the imaging itself.",
 
   "rai:dataUseCases": "Recommended uses: (i) benchmarking vision-language models on multi-frame spatially grounded medical reasoning, (ii) supervised fine-tuning research on grounded clinical reasoning, (iii) evaluation of chain-of-thought reasoning quality in radiology, (iv) studies of cross-slice visual grounding capabilities. Not recommended: direct clinical decision-making, autonomous diagnosis, training models for unsupervised radiology workflows, or any clinical application without expert oversight. Construct validity: the dataset measures VLM ability to localize and reason about MRI findings using radiologist-annotated bounding boxes as the ground truth; it does not measure broader clinical reasoning beyond the annotated finding categories.",
 
@@ -99,68 +99,12 @@
       "@type": "cr:FileSet",
       "@id": "qa-pairs",
       "name": "qa-pairs",
-      "description": "JSON files containing brain and knee MRI question-answer pairs with chain-of-thought reasoning traces and ground-truth bounding-box coordinates. Files are organized in brain/ and knee/ subfolders and follow the naming pattern gpt4o_{domain}_{train,test,val}_{image,volume}_qa_*_qa_pairs.json.",
+      "description": "JSON files containing brain and knee MRI question-answer pairs with chain-of-thought reasoning traces and ground-truth bounding-box coordinates. Files are organized as {brain,knee}/{train,test}/{image_qa,volume_qa}/*.json. Image-level QA pairs are in image_qa/, multi-frame QA pairs are in volume_qa/. The repository releases ONLY these derived QA pairs; the underlying MRI images and original radiologist bounding-box annotations are NOT included and must be obtained directly from fastMRI (https://fastmri.med.nyu.edu/) and fastMRI+ (https://github.com/microsoft/fastmri-plus).",
       "containedIn": {
         "@id": "huggingface-repo"
       },
       "encodingFormat": "application/json",
-      "includes": "**/*qa_pairs.json"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "brain-train-images",
-      "name": "brain-train-images",
-      "description": "TAR archive of brain MRI training images (per-slice grayscale PNGs).",
-      "contentUrl": "https://huggingface.co/datasets/SpatialGroundingVQA/SGMRI-VQA/resolve/main/brain_train_images.tar",
-      "encodingFormat": "application/x-tar"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "brain-test-images",
-      "name": "brain-test-images",
-      "description": "TAR archive of brain MRI test images (per-slice grayscale PNGs).",
-      "contentUrl": "https://huggingface.co/datasets/SpatialGroundingVQA/SGMRI-VQA/resolve/main/brain_test_images.tar",
-      "encodingFormat": "application/x-tar"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "knee-train-images",
-      "name": "knee-train-images",
-      "description": "TAR archive of knee MRI training images (per-slice grayscale PNGs).",
-      "contentUrl": "https://huggingface.co/datasets/SpatialGroundingVQA/SGMRI-VQA/resolve/main/knee_train_images.tar",
-      "encodingFormat": "application/x-tar"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "knee-test-images",
-      "name": "knee-test-images",
-      "description": "TAR archive of knee MRI test images (per-slice grayscale PNGs).",
-      "contentUrl": "https://huggingface.co/datasets/SpatialGroundingVQA/SGMRI-VQA/resolve/main/knee_test_images.tar",
-      "encodingFormat": "application/x-tar"
-    },
-    {
-      "@type": "cr:FileSet",
-      "@id": "brain-images",
-      "name": "brain-images",
-      "description": "Per-slice brain MRI grayscale PNG images extracted from the brain TAR archives.",
-      "containedIn": [
-        {"@id": "brain-train-images"},
-        {"@id": "brain-test-images"}
-      ],
-      "encodingFormat": "image/png",
-      "includes": "*.png"
-    },
-    {
-      "@type": "cr:FileSet",
-      "@id": "knee-images",
-      "name": "knee-images",
-      "description": "Per-slice knee MRI grayscale PNG images extracted from the knee TAR archives.",
-      "containedIn": [
-        {"@id": "knee-train-images"},
-        {"@id": "knee-test-images"}
-      ],
-      "encodingFormat": "image/png",
-      "includes": "*.png"
+      "includes": "**/{image_qa,volume_qa}/*.json"
     }
   ],
 
