@@ -85,14 +85,7 @@ SGMRI-VQA/
 git clone <REPO_URL>
 cd SGMRI-VQA
 pip install -e .
-```
 
-Create a `.env` file with your API keys (for proprietary model inference and AR-Score evaluation):
-
-```
-OPENAI_API_KEY=your-key
-GOOGLE_API_KEY=your-key
-```
 
 ### Data
 
