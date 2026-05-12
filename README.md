@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://arxiv.org/abs/2512.16301">Paper (arXiv)</a> &nbsp;&middot;&nbsp;
-   <a href="https://lamawmouk.github.io/SGMRI-VQA">Project Page</a> &nbsp;&middot;&nbsp;  
+  <a href="https://lamawmouk.github.io/SGMRI-VQA">Project Page</a> &nbsp;&middot;&nbsp;
   <a href="https://huggingface.co/lamamkh/Qwen3-8B-SGMRIQA-SFT">Model Weights</a>
 </p>
 
@@ -21,6 +21,9 @@
   <sup>3</sup>Georgetown University
 </p>
 
+<p align="center">
+  &#11088; <b>Star this repository if you find it helpful!</b>
+</p>
 
 SGMRI-VQA is a benchmark for evaluating how well VLMs spatially ground findings in volumetric medical images, where reasoning must extend across dozens of sequential slices.
 
